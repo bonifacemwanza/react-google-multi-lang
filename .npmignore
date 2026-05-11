@@ -1,5 +1,10 @@
 node_modules
 src
+test
+coverage
 .babelrc
-.eslintrc.json
 .prettierrc
+eslint.config.js
+vitest.config.mjs
+webpack.config.js
+strucure.txt
