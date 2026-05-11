@@ -2,15 +2,33 @@
   "name": "react-google-multi-lang",
   "version": "1.0.7",
   "description": "A library to support multi-language translation in React apps using Google Translation API.",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "index.d.ts",
+    "README_redux.md"
+  ],
   "scripts": {
-    "build": "NODE_ENV=production babel src --out-dir dist --out-file-extension .js --extensions \".js,.jsx\" --ignore \"src/test/**\"",
+    "clean": "rm -rf dist",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir dist/cjs --out-file-extension .js --extensions \".js,.jsx\" --ignore \"src/test/**\"",
+    "build:esm": "BABEL_ENV=esm babel src --out-dir dist/esm --out-file-extension .js --extensions \".js,.jsx\" --ignore \"src/test/**\"",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm && node scripts/postbuild.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettify": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run prettify && npm run lint && npm test && npm run build",
+    "prepublishOnly": "npm run lint && npm test && npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -47,6 +65,7 @@
     "@testing-library/react": "^16.3.2",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/coverage-v8": "^3.2.4",
+    "babel-plugin-add-import-extension": "^1.6.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",

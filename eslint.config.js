@@ -46,10 +46,19 @@ module.exports = [
     },
   },
   {
-    // CommonJS config files (this file, babel/webpack configs)
+    // CommonJS config files at the repo root (this file, etc.)
     files: ['*.js', '*.cjs'],
     languageOptions: {
       sourceType: 'commonjs',
+      globals: { ...globals.node },
+    },
+  },
+  {
+    // ESM tooling: build scripts and *.mjs configs.
+    files: ['scripts/**/*.{js,mjs}', '*.mjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: { ...globals.node },
     },
   },
