@@ -1,5 +1,9 @@
 # react-google-multi-lang
 
+[![npm version](https://img.shields.io/npm/v/react-google-multi-lang.svg)](https://www.npmjs.com/package/react-google-multi-lang)
+[![CI](https://github.com/bonifacemwanza/react-google-multi-lang/actions/workflows/ci.yml/badge.svg)](https://github.com/bonifacemwanza/react-google-multi-lang/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/react-google-multi-lang.svg)](./LICENSE)
+
 A React library for multi-language UI translation, powered by the [Google Cloud
 Translation API](https://cloud.google.com/translate). No translation files to
 maintain — wrap your app, pick a language, and the visible text is translated at
@@ -190,6 +194,21 @@ The API key is used from the browser, so:
 - For production, the safer pattern is to route translation requests through your
   own backend that holds the key server-side. (A pluggable request endpoint is on
   the roadmap.)
+
+## Contributing / Releasing
+
+CI (`lint` + `test` + `build`) runs on every push and pull request across Node
+18/20/22. To cut a release (maintainers):
+
+```bash
+npm version patch   # or minor / major — bumps package.json and creates a git tag
+git push --follow-tags
+```
+
+Then create a GitHub Release for the new `vX.Y.Z` tag. The `Release` workflow
+verifies the tag matches `package.json`, re-runs lint/test/build, and publishes
+to npm with provenance. (Requires an `NPM_TOKEN` repo secret — see
+`.github/workflows/release.yml`.)
 
 ## License
 

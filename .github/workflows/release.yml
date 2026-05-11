@@ -1,0 +1,60 @@
+name: Release
+
+# Publishes to npm when a GitHub Release is published.
+#
+# Setup (one-time):
+#   1. Create an npm automation token: https://www.npmjs.com/settings/<user>/tokens
+#      (type "Automation" so it bypasses 2FA in CI).
+#   2. Add it as a repo secret named NPM_TOKEN:
+#      Settings → Secrets and variables → Actions → New repository secret.
+#
+# Releasing:
+#   1. Bump the version in package.json + commit it (or run `npm version <type>`).
+#   2. Push, then create a GitHub Release with tag `vX.Y.Z` matching package.json.
+#   3. This workflow builds, tests, checks the tag matches, and runs `npm publish`.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write # enables npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - run: npm ci
+
+      - name: Verify package.json version matches the release tag
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          TAG="${GITHUB_REF_NAME}"
+          echo "package.json: $PKG_VERSION   release tag: $TAG"
+          if [ "$PKG_VERSION" != "$TAG" ]; then
+            echo "::error::package.json version ($PKG_VERSION) does not match the release tag ($TAG). Bump package.json before tagging."
+            exit 1
+          fi
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
