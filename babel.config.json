@@ -1,0 +1,29 @@
+{
+  "presets": ["@babel/preset-react"],
+  "env": {
+    "cjs": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": "commonjs",
+            "targets": { "node": "18" }
+          }
+        ]
+      ]
+    },
+    "esm": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": false,
+            "bugfixes": true,
+            "targets": "defaults and supports es6-module"
+          }
+        ]
+      ],
+      "plugins": [["babel-plugin-add-import-extension", { "extension": "js" }]]
+    }
+  }
+}
